@@ -33,7 +33,7 @@ export const signUp = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+export const Login = async (req, res) => {
   try {
     const {  email, password } = req.body;
 
@@ -59,3 +59,13 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: `login error ${error}` });
   }
 };
+export const Logout = async (req, res) => {
+  try {
+    res.clearCookie("access_token")
+    return res.status(200).json("msg": "logged out")
+  }
+  catch (error){
+    return res.status(500).json("msg":`Logout errpr ${error}`)
+  };
+  
+}
