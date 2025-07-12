@@ -1,10 +1,11 @@
 import getToken from "../config/token.js";
+import userSchema from '../models/user.model.js'
 
 export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const existEmail = await User.findOne({ email });
+    const existEmail = await userSchema.findOne({ email });
     if (existEmail) {
       return res.status(400).json({ message: "email already exists" });
     }
@@ -15,7 +16,7 @@ export const signUp = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    const user = await userSchema.create({
       name,
       password: hashPassword,
       email,
@@ -37,7 +38,7 @@ export const Login = async (req, res) => {
   try {
     const {  email, password } = req.body;
 
-    const existUser = await User.findOne({ email });
+    const existUser = await userSchema.findOne({ email });
     if  (!existUser) {
       return res.status(400).json({ message: "email not exists" });
     }
