@@ -1,7 +1,7 @@
 import getToken from "../config/token.js";
 import userSchema from '../models/user.model.js'
 
-export const signUp = async (req, res) => {
+export const SignUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
