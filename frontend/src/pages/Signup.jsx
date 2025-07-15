@@ -1,65 +1,141 @@
+// src/pages/Signup.jsx
 import React, { useState } from "react";
-import singupbg from "../assets/signup-img.png";
-import { IoEye } from "react-icons/io5";
-import { IoEyeOff } from "react-icons/io5";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import signupBg from "../assets/signup-img.png";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { api, baseUrl } from "../common/api.js";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required").min(2, "Too short"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
+
+  const handleSignup = async (values, { setSubmitting }) => {
+    try {
+      const res = await axios({
+        method: api.register.method,
+        url: baseUrl.register,
+        data: values,
+        withCredentials: true,
+      });
+      toast.success("Signup successful!", { autoClose: 2000 });
+      navigate("/signin");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Signup failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div
-      className="w-full h-[100vh]  bg-cover flex justify-center align-items-center bg-center"
-      style={{
-        backgroundImage: `url(${singupbg})`,
-      }}>
-      <form className="w-[90%] h-[500px] max-w-[500px] bg-transparent backdrop-blur shadow-lg shadow-blue flex flex-col items-center  gap-[20px] mt-10 px-[20px]">
-        <h1 className="text-white text-[30px] font-semibold mb-[30px] mt-7">
-          Register
-        </h1>
+      className="w-full h-screen flex justify-center items-center bg-center bg-cover"
+      style={{ backgroundImage: `url(${signupBg})` }}>
+      <ToastContainer />
+      <div className="w-[90%] max-w-[500px] bg-white/10 backdrop-blur-md rounded-2xl shadow-xl p-8">
+        <h2 className="text-white text-3xl font-bold mb-6 text-center">
+          Create Account
+        </h2>
 
-        <input
-          type="text"
-          placeholder="Enter Your Name"
-          className="w-full h-[60px] outline-none border-2 border-white bg-transparent text-white placeholder-bg-gray-300 px-[20px]  py-[10px] rounded-full"
-        />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSignup}>
+          {({ isSubmitting }) => (
+            <Form className="flex flex-col gap-5">
+              {/* Name */}
+              <div>
+                <Field
+                  name="name"
+                  type="text"
+                  placeholder="Full Name"
+                  className="w-full px-5 py-3 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
+                />
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="text-red-400 text-sm mt-1 ml-2"
+                />
+              </div>
 
-        <input
-          type="Email"
-          placeholder="Enter Your Email"
-          className="w-full h-[60px] outline-none border-2 border-white bg-transparent text-white placeholder-bg-gray-300 px-[20px]  py-[10px] rounded-full"
-        />
+              {/* Email */}
+              <div>
+                <Field
+                  name="email"
+                  type="email"
+                  placeholder="Email Address"
+                  className="w-full px-5 py-3 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-400 text-sm mt-1 ml-2"
+                />
+              </div>
 
-        <div className="w-full h-[60px] relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter Your Password"
-            className="w-full h-full outline-none border-2 border-white bg-transparent text-white placeholder:text-gray-300 px-[20px] pr-[50px] rounded-full text-[18px] "
-          />
-          {!showPassword && (
-            <IoEye
-              className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-white text-[22px] cursor-pointer"
-              onClick={() => setShowPassword(true)}
-            />
+              {/* Password with toggle */}
+              <div className="relative">
+                <Field
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  className="w-full px-5 py-3 pr-12 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
+                />
+                <div
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white cursor-pointer"
+                  onClick={() => setShowPassword((prev) => !prev)}>
+                  {showPassword ? <IoEyeOff size={22} /> : <IoEye size={22} />}
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-400 text-sm mt-1 ml-2"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full py-3 rounded-full font-semibold text-lg transition duration-300 ${
+                  isSubmitting
+                    ? "bg-white/50 text-gray-600 cursor-not-allowed"
+                    : "bg-white text-blue-800 hover:bg-blue-100"
+                }`}>
+                {isSubmitting ? "Signing Up..." : "Signup"}
+              </button>
+
+              {/* Link to Signin */}
+              <p className="text-white text-center text-sm mt-4">
+                Already have an account?{" "}
+                <span
+                  onClick={() => navigate("/signin")}
+                  className="underline cursor-pointer text-blue-200">
+                  Signin here
+                </span>
+              </p>
+            </Form>
           )}
-          {showPassword && (
-            <IoEyeOff
-              className="absolute right-[20px] top-1/2 transform -translate-y-1/2 text-white text-[22px] cursor-pointer"
-              onClick={() => setShowPassword(false)}
-            />
-          )}
-        </div>
-
-        <button className="min-w-[150px] h-[60px] bg-white rounded-full font-semibold text-[19px] cursor-pointer">
-          Signup
-        </button>
-        <p  onClick={()=>navigate('/signin')} className="text-white text-[18px] cursor-pointer ">
-          Already have an account?
-          <span className="text-blue-950 font-semibold cursor-pointer ">
-            Signin
-          </span>
-        </p>
-      </form>
+        </Formik>
+      </div>
     </div>
   );
 };
