@@ -1,4 +1,5 @@
 import express from "express";
+import mongoConnect from "./config/db.js";
 
 const app = express();
 app.use("/get", (req, res) => {
@@ -8,5 +9,6 @@ app.use("/get", (req, res) => {
 const port = 3000;
 
 app.listen(port, () => {
+  mongoConnect();
   console.log(`app is running, ${port}`);
 });
