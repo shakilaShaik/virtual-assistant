@@ -6,13 +6,13 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
 const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
 
-
-app.get("/", ( req,res) => {
+app.get("/", (req, res) => {
   res.send("Hello World iam from backend");
 });
 
