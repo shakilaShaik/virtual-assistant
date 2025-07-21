@@ -1,9 +1,8 @@
-
-import bcrypt from "bcryptjs"; // ✅ Correct bcrypt import
+import bcrypt from "bcryptjs";
 import getToken from "../config/token.js";
-import userSchema from "../models/user.model.js";
+import userModel from "../models/user.model.js";
 
-export const SignUp = async (req, res) => {
+export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -39,8 +38,7 @@ export const SignUp = async (req, res) => {
   }
 };
 
-
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -79,4 +77,14 @@ const login = async (req, res) => {
   }
 };
 
-export default login;
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({ msg: "logout successfully" });
+  } catch (error) {
+    return res.status(500).json({ msg: "logout error" });
+  }
+};
+
+
+
