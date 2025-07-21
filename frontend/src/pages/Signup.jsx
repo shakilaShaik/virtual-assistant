@@ -5,7 +5,8 @@ import * as Yup from "yup";
 import signupBg from "../assets/signup-img.png";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { api, baseUrl } from "../common/api.js";
+// import { api, baseUrl } from "../common/api.jsx";
+import { api, baseUrl } from "../common/api"
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,16 +31,18 @@ const Signup = () => {
 
   const handleSignup = async (values, { setSubmitting }) => {
     try {
+      console.log("url is ", `${baseUrl}/${api.register.url}`);
       const res = await axios({
         method: api.register.method,
-        url: baseUrl.register,
+        url: ` ${baseUrl}/${api.register.url}`,
         data: values,
         withCredentials: true,
       });
-      toast.success("Signup successful!", { autoClose: 2000 });
+
+      toast.success("Signup successful!", res.data.msg);
       navigate("/signin");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Signup failed");
+      toast.error(error.res?.data?.msg || "Signup failed");
     } finally {
       setSubmitting(false);
     }
@@ -141,3 +144,10 @@ const Signup = () => {
 };
 
 export default Signup;
+
+// import React from "react";
+
+//  const Signup = () => {
+//   return <div>Signup</div>;
+// };
+// export default Signup

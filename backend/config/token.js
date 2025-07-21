@@ -4,7 +4,7 @@ dotenv.config();
 
 const getToken = async (userId) => {
   try {
-    const token = await jwt.sign({ userId }, process.env.JWT_SECRET, {
+    const token =  jwt.sign({ userId }, process.env.JWT_SECRET, {
       expiresIn: "10d",
     });
     return token;
