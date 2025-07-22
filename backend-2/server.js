@@ -1,10 +1,11 @@
 import express from "express";
 import mongoConnect from "./config/db.js";
-import userRouter from "./routes/user.route.js";
+// import userRouter from "./routes/user.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { authRouter } from "./routes/user.route.js";
 
 const app = express();
 
@@ -15,15 +16,18 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use("/get", (req, res) => {
+app.get("/", (req, res) => {
   res.send("server started");
 });
 app.use(express.json());
-app.use(cookieParser);
+app.use(cookieParser());
 
 const port = 3000;
-app.use("/api/auth", userRouter);
+// app.use("/api/auth", userRouter);
+
+app.use("/api/auth", authRouter);
+
 app.listen(port, () => {
   mongoConnect();
-  console.log(`app is running, ${port}`);
+  console.log(`app is running,${port}`);
 });

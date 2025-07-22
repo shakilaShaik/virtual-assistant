@@ -5,8 +5,11 @@ import userModel from "../models/user.model.js";
 export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ msg: "all fields are required" });
+    }
 
-    const existEmail = await userSchema.findOne({ email });
+    const existEmail = await userModel.findOne({ email });
     if (existEmail) {
       return res.status(400).json({ message: "Email already exists" });
     }
@@ -18,21 +21,21 @@ export const signUp = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const user = await userSchema.create({
+    const user = await userModel.create({
       name,
       password: hashPassword,
       email,
     });
 
-    const token = await getToken(user._id);
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: "strict",
-      secure: false, // ✅ should be true in production
-    });
+    // const token = getToken(user._id);
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    //   sameSite: "strict",
+    //   secure: false, // ✅ should be true in production
+    // });
 
-    return res.status(201).json(user);
+    return res.status(201).json({ user: user, msg: "signup successful" });
   } catch (error) {
     return res.status(500).json({ message: `Signup error: ${error.message}` });
   }
@@ -55,7 +58,7 @@ export const login = async (req, res) => {
     }
 
     // Generate token
-    const token = await getToken(userInDb._id);
+    const token = getToken(userInDb._id);
 
     // Set httpOnly cookie
     res.cookie("token", token, {
@@ -85,6 +88,3 @@ export const logout = async (req, res) => {
     return res.status(500).json({ msg: "logout error" });
   }
 };
-
-
-
