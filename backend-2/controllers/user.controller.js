@@ -6,7 +6,7 @@ export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!email || !password || !name) {
-      return res.status(400).json({ msg: "all fields are required" });
+      return res.status(400).json({ message: "all fields are required" });
     }
 
     const existEmail = await userModel.findOne({ email });
