@@ -1,6 +1,4 @@
-// src/pages/Signup.jsx
 import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
 import signupBg from "../assets/signup-img.png";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -11,24 +9,23 @@ import "react-toastify/dist/ReactToastify.css";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
   const navigate = useNavigate();
 
-  const initialValues = {
-    email: "",
-    password: "",
-  };
-
-  const handleSignup = async (values) => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
     try {
       const res = await axios({
         method: api.register.method,
         url: `${baseUrl}/${api.login.url}`,
-        data: values,
+        data: { email, password },
         withCredentials: true,
       });
-      toast.success(res.data.msg || "Signup successful!");
+      toast.success(res.data.msg || "login successful!");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Signup failed.");
+      toast.error(error?.response?.data?.msg || "Signin failed.");
     }
   };
 
@@ -42,46 +39,50 @@ const SignIn = () => {
           Create Account
         </h2>
 
-        <Formik initialValues={initialValues} onSubmit={handleSignup}>
-          <Form className="flex flex-col gap-5">
-            
-            <Field
-              name="email"
-              type="email"
-              placeholder="Email Address"
-              className="w-full px-5 py-3 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
+        <form className="flex flex-col gap-5" onSubmit={handleSignup}>
+          <input
+            name="email"
+            value={email}
+            placeholder="Email Address"
+            className="w-full px-5 py-3 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+
+          <div className="relative">
+            <input
+              name="password"
+              value={password}
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full px-5 py-3 pr-12 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
-
-            <div className="relative">
-              <Field
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                className="w-full px-5 py-3 pr-12 rounded-full bg-white/20 text-white placeholder:text-white outline-none border border-white"
-              />
-              <div
-                className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white cursor-pointer"
-                onClick={() => setShowPassword((prev) => !prev)}>
-                {showPassword ? <IoEyeOff size={22} /> : <IoEye size={22} />}
-              </div>
+            <div
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}>
+              {showPassword ? <IoEyeOff size={22} /> : <IoEye size={22} />}
             </div>
+          </div>
 
-            <button
-              type="submit"
-              className="w-full py-3 rounded-full font-semibold text-lg bg-white text-blue-800 hover:bg-blue-100 transition duration-300">
-              Signin
-            </button>
+          <button
+            type="submit"
+            className="w-full py-3 rounded-full font-semibold text-lg bg-white text-blue-800 hover:bg-blue-100 transition duration-300">
+            Signin
+          </button>
 
-            <p className="text-white text-center text-sm mt-4">
-              Dont have an account?{" "}
-              <span
-                onClick={() => navigate("/signup")}
-                className="underline cursor-pointer text-blue-200">
-                Signup here
-              </span>
-            </p>
-          </Form>
-        </Formik>
+          <p className="text-white text-center text-sm mt-4">
+            Don't have an account?
+            <span
+              onClick={() => navigate("/signup")}
+              className="underline cursor-pointer text-blue-200">
+              Signup here
+            </span>
+          </p>
+        </form>
       </div>
     </div>
   );
