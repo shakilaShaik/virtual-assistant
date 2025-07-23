@@ -88,3 +88,17 @@ export const logout = async (req, res) => {
     return res.status(500).json({ msg: "logout error" });
   }
 };
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const user = await userModel.findById(userId).select("-password");
+    if (!user) {
+      return res.status(400).json({ msg: "user not found" });
+    }
+    return res.json(200).json({ user: user });
+  } catch (error) {
+    return res.status(400).json({ msg: "user not found" });
+  }
+};
