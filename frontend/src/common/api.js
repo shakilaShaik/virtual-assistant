@@ -13,5 +13,10 @@ const api = {
     url: "api/auth/logout",
     method: "get",
   },
+
+  getUser: {
+    url: "api/auth/get-user",
+    method:"get"
+  }
 };
 export { api, baseUrl };

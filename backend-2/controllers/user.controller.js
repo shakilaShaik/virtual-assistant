@@ -97,7 +97,7 @@ export const getCurrentUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({ msg: "user not found" });
     }
-    return res.json(200).json({ user: user });
+    return res.status(200).json({ user: user });
   } catch (error) {
     return res.status(400).json({ msg: "user not found" });
   }
