@@ -16,11 +16,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(express.json());
+app.use(cookieParser());
+
 app.get("/", (req, res) => {
   res.send("server started");
 });
-app.use(express.json());
-app.use(cookieParser());
 
 const port = 3000;
 // app.use("/api/auth", userRouter);
