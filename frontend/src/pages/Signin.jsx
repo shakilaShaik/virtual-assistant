@@ -6,6 +6,7 @@ import { api, baseUrl } from "../common/api";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {UserContext} from '../context/UserContext'
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
+  // const {user,setUser}=UserContext
 
   const handleSignup = async (e) => {
     e.preventDefault();

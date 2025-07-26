@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { BrowserRouter as Routers, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Routers, Routes, Route,Navigate } from "react-router-dom";
 import { Home } from "./pages/Home";
 import Signup from "./pages/Signup";
 import SignIn from "./pages/Signin";
@@ -11,8 +11,9 @@ import { api, baseUrl } from "./common/api";
 import { UserContext } from "./context/UserContext";
 // const [user, setUser] = useState(null)
 
+
 const App = () => {
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const handleUserData = async () => {
     try {
@@ -21,8 +22,8 @@ const App = () => {
         url: `${baseUrl}/${api.getUser.url}`,
         withCredentials: true,
       });
-      setUser(result.data);
-      console.log("user result is ", result);
+      setUser(result.data.user);
+      console.log("user  is ", user);
     } catch (error) {
       console.log("error from user data", error);
     }
@@ -35,7 +36,10 @@ const App = () => {
     <div>
       <Routers>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={user ? <Home /> : <Navigate to={"/customize"} />}
+          />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/customize" element={<Customize />} />
