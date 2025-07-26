@@ -7,9 +7,11 @@ import img2 from "../assets/customise-2.jpg";
 import img3 from "../assets/customise-3.jpg";
 import img4 from "../assets/customise-4.jpg";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Customize = () => {
   const inputImage = useRef();
+  const navigate=useNavigate()
   const {
     setBackendImage,
     setFrontendImage,
@@ -71,7 +73,7 @@ const Customize = () => {
       </div>
 
       <div className="w-full flex justify-center mt-10">
-        <button className="min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full justify-center">
+        <button className="min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full justify-center" onClick={() => navigate("/customize2")}>
           Next
         </button>
       </div>

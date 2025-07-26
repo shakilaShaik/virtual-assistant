@@ -1,6 +1,11 @@
 import React, { useContext } from "react";
 
-import { BrowserRouter as Routers, Routes, Route,Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Routers,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { Home } from "./pages/Home";
 import Signup from "./pages/Signup";
 import SignIn from "./pages/Signin";
@@ -9,8 +14,8 @@ import { useEffect } from "react";
 import axios from "axios";
 import { api, baseUrl } from "./common/api";
 import { UserContext } from "./context/UserContext";
+import Customize2 from "./pages/Customize2";
 // const [user, setUser] = useState(null)
-
 
 const App = () => {
   const { user, setUser } = useContext(UserContext);
@@ -43,6 +48,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/customize" element={<Customize />} />
+          <Route path="/customize2" element={<Customize2 />} />
         </Routes>
       </Routers>
     </div>
