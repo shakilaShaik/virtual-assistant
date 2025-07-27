@@ -17,6 +17,10 @@ const api = {
   getUser: {
     url: "api/auth/get-user",
     method:"get"
+  },
+  updateUser: {
+    url: "api/auth/update-user",
+    method:"put"
   }
 };
 export { api, baseUrl };

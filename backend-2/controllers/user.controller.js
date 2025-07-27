@@ -103,3 +103,27 @@ export const getCurrentUser = async (req, res) => {
     return res.status(400).json({ msg: "user not found" });
   }
 };
+
+
+export const updateAssistant = async (req, res) => {
+  try {
+
+    const { assistantName, imageURL } = req.body
+    let assistantImage;
+    if (req.file) {
+      assistantImage = await upload(req.file.path)
+    }
+    else {
+      assistantImage = imageURL
+    }
+    const user = await userModel.findByIdAndUpdate(req.userId, {
+      assistantImage, assistantName
+    }, { new: true }).select("-password")
+    
+    return res.status(200).json(user)
+  } catch (error) {
+    return res.status(400).json({ msg: "update assistant error}" })
+    
+  }
+  }
+  

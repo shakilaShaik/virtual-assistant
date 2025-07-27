@@ -13,8 +13,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  assistantName: {
+    type: String,
+    required: true,
+  },
+  assistantImage: {
+    type: String,
+    required: true,
+  },
 });
 
-const userModel=mongoose.model("User",userSchema)
+const userModel = mongoose.model("User", userSchema);
 
-export default userModel
+export default userModel;

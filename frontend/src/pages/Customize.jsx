@@ -1,33 +1,59 @@
+// Customize.jsx
 import React, { useContext, useRef } from "react";
 import Card from "../components/Card";
 import { FiUpload } from "react-icons/fi";
-
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import img1 from "../assets/customise-1.jpg";
 import img2 from "../assets/customise-2.jpg";
 import img3 from "../assets/customise-3.jpg";
 import img4 from "../assets/customise-4.jpg";
-import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
 
 const Customize = () => {
   const inputImage = useRef();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
   const {
     setBackendImage,
     setFrontendImage,
     frontendImage,
     setSelectedImage,
     selectedImage,
+    setAssistantName,
   } = useContext(UserContext);
 
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload a valid image.");
+      return;
+    }
+
     const objectURL = URL.createObjectURL(file);
     setBackendImage(file);
     setFrontendImage(objectURL);
-    setSelectedImage(objectURL); // ✅ Mark uploaded image as selected
+    setSelectedImage(objectURL);
+
+    e.target.value = null;
+  };
+
+  const handleCardClick = (image) => {
+    setSelectedImage(image);
+    setBackendImage(null); // Use URL instead of file
+    setFrontendImage(null);
+  };
+
+  const handleNext = () => {
+    if (!selectedImage && !frontendImage) {
+      alert("Please select or upload an image before continuing.");
+      return;
+    }
+
+    // Clear any previously set name when going to next step
+    setAssistantName("");
+    navigate("/customize2");
   };
 
   return (
@@ -38,7 +64,12 @@ const Customize = () => {
 
       <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-start gap-6">
         {[img1, img2, img3, img4].map((image, index) => (
-          <Card key={index} img={image} />
+          <Card
+            key={index}
+            img={image}
+            onClick={() => handleCardClick(image)}
+            selected={selectedImage === image}
+          />
         ))}
 
         {/* Upload Box */}
@@ -73,7 +104,9 @@ const Customize = () => {
       </div>
 
       <div className="w-full flex justify-center mt-10">
-        <button className="min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full justify-center" onClick={() => navigate("/customize2")}>
+        <button
+          className="min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full justify-center"
+          onClick={handleNext}>
           Next
         </button>
       </div>

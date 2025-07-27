@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, use } from "react";
 
 // 1️⃣ Create a context object
 export const UserContext = createContext();
@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [assistantName,setAssistantName]=useState(null)
   return (
     <UserContext.Provider
       value={{
@@ -22,6 +22,8 @@ export const UserProvider = ({ children }) => {
         setBackendImage,
         selectedImage,
         setSelectedImage,
+        assistantName,
+        setAssistantName
       }}>
       {children}
     </UserContext.Provider>
