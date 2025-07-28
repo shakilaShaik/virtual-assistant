@@ -20,7 +20,7 @@ import Customize2 from "./pages/Customize2";
 const App = () => {
   const { user, setUser } = useContext(UserContext);
 
-  const handleUserData = async () => {
+  const handleUserData = async (va) => {
     try {
       const result = await axios({
         method: api.method,

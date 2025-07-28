@@ -26,10 +26,10 @@ const Customize = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      alert("Please upload a valid image.");
-      return;
-    }
+    // if (!file.type.startsWith("image/")) {
+    //   alert("Please upload a valid image.");
+    //   return;
+    // }
 
     const objectURL = URL.createObjectURL(file);
     setBackendImage(file);

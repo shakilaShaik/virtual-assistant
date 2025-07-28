@@ -6,7 +6,7 @@ import { api, baseUrl } from "../common/api";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {UserContext} from '../context/UserContext'
+import { UserContext } from "../context/UserContext";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +26,9 @@ const SignIn = () => {
         withCredentials: true,
       });
       toast.success(res.data.msg || "login successful!");
+      navigate("/customize");
+      setEmail("")
+      setPassword("")
     } catch (error) {
       toast.error(error?.response?.data?.msg || "Signin failed.");
     }

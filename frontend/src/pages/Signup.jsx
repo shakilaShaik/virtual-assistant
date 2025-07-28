@@ -19,7 +19,7 @@ const Signup = () => {
     password: "",
   };
 
-  const handleSignup = async (values) => {
+  const handleSignup = async (values, actions) => {
     try {
       const res = await axios({
         method: api.register.method,
@@ -28,6 +28,8 @@ const Signup = () => {
         withCredentials: true,
       });
       toast.success(res.data.msg || "Signup successful!");
+      actions.resetForm(); // ✅ Reset form fields
+      navigate("/signin");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Signup failed.");
     }
@@ -43,7 +45,11 @@ const Signup = () => {
           Create Account
         </h2>
 
-        <Formik initialValues={initialValues} onSubmit={handleSignup}>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={(values, actions) => {
+            handleSignup(values, actions);
+          }}>
           <Form className="flex flex-col gap-5">
             <Field
               name="name"

@@ -16,11 +16,11 @@ const userSchema = new mongoose.Schema({
 
   assistantName: {
     type: String,
-    required: true,
+    default: null,
   },
   assistantImage: {
     type: String,
-    required: true,
+    default: null,
   },
 });
 
