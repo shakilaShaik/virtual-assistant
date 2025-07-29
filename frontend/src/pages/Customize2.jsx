@@ -31,8 +31,8 @@ const Customize2 = () => {
 
     try {
       const res = await axios({
-        method: api.method,
-        url: `${baseUrl}/${api.updateUser}`,
+        method: api.updateUser.method,
+        url: `${baseUrl}/${api.updateUser.url}`,
         data: formData,
         withCredentials: true,
         headers: {

@@ -21,6 +21,6 @@ const api = {
   updateUser: {
     url: "api/auth/update-user",
     method:"put"
-  }
+  },
 };
 export { api, baseUrl };
