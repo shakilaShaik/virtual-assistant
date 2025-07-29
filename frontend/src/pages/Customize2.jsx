@@ -41,7 +41,7 @@ const Customize2 = () => {
       });
 
       console.log("Assistant updated:", res.data);
-      navigate("/dashboard");
+      navigate("/home");
     } catch (err) {
       console.error("Failed to update assistant:", err);
       alert("Failed to save assistant. Try again.");
@@ -71,6 +71,9 @@ const Customize2 = () => {
           onClick={handleSubmit}>
           {loading ? "Saving..." : "Create Your Assistant"}
         </button>
+
+
+        
       </div>
     </div>
   );

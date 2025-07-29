@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 import {
-  BrowserRouter as Routers,
+  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -20,7 +20,7 @@ import Customize2 from "./pages/Customize2";
 const App = () => {
   const { user, setUser } = useContext(UserContext);
 
-  const handleUserData = async (va) => {
+  const handleUserData = async () => {
     try {
       const result = await axios({
         method: api.method,
@@ -28,7 +28,7 @@ const App = () => {
         withCredentials: true,
       });
       setUser(result.data.user);
-      console.log("user  is ", user);
+      // console.log("user  is ", user);
     } catch (error) {
       console.log("error from user data", error);
     }
@@ -36,21 +36,22 @@ const App = () => {
 
   useEffect(() => {
     handleUserData();
+    console.log(user);
   }, []);
   return (
     <div>
-      <Routers>
+      <Router>
         <Routes>
           <Route
-            path="/"
-            element={user ? <Home /> : <Navigate to={"/customize"} />}
+            path="/home"
+            element={user ? <Home /> : <Navigate to={"/signin"} />}
           />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/customize" element={<Customize />} />
           <Route path="/customize2" element={<Customize2 />} />
         </Routes>
-      </Routers>
+      </Router>
     </div>
   );
 };
