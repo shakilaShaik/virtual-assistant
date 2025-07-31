@@ -6,6 +6,7 @@ dotenv.config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/user.route.js";
+import geminiResponse from "./gemini.js";
 
 const app = express();
 
@@ -27,7 +28,12 @@ const port = 3000;
 // app.use("/api/auth", userRouter);
 
 app.use("/api/auth", authRouter);
-
+app.get("/gemini", async(req, res) => {
+  let prompt = req.query.prompt;
+  let data = geminiResponse(prompt);
+  res.json(data)
+  
+});
 app.listen(port, () => {
   mongoConnect();
   console.log(`app is running,${port}`);
