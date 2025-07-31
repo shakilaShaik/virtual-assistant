@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   BrowserRouter as Router,
@@ -19,6 +19,7 @@ import Customize2 from "./pages/Customize2";
 
 const App = () => {
   const { user, setUser } = useContext(UserContext);
+  const [loading,setLoading]=useState(true)
 
   const handleUserData = async () => {
     try {
@@ -28,16 +29,29 @@ const App = () => {
         withCredentials: true,
       });
       setUser(result.data.user);
-      // console.log("user  is ", user);
+      console.log("the result from get", result);
+
+      console.log("user  is ", user);
     } catch (error) {
       console.log("error from user data", error);
+    }
+    finally {
+      setLoading(false)
     }
   };
 
   useEffect(() => {
     handleUserData();
-    console.log(user);
   }, []);
+   useEffect(() => {
+     console.log("User context updated:", user);
+   }, [user]);
+
+  if (loading) {
+    return <div>Loading....</div>
+  }
+ 
+
   return (
     <div>
       <Router>

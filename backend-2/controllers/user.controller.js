@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import getToken from "../config/token.js";
 import userModel from "../models/user.model.js";
 
-
 export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -95,6 +94,7 @@ export const getCurrentUser = async (req, res) => {
     const userId = req.userId;
 
     const user = await userModel.findById(userId).select("-password");
+    console.log(user, "user is ");
     if (!user) {
       return res.status(400).json({ msg: "user not found" });
     }
@@ -104,26 +104,28 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
-
 export const updateAssistant = async (req, res) => {
   try {
-
-    const { assistantName, imageURL } = req.body
+    const { assistantName, imageURL } = req.body;
     let assistantImage;
     if (req.file) {
-      assistantImage = await upload(req.file.path)
+      assistantImage = await upload(req.file.path);
+    } else {
+      assistantImage = imageURL;
     }
-    else {
-      assistantImage = imageURL
-    }
-    const user = await userModel.findByIdAndUpdate(req.userId, {
-      assistantImage, assistantName
-    }, { new: true }).select("-password")
-    
-    return res.status(200).json(user)
+    const user = await userModel
+      .findByIdAndUpdate(
+        req.userId,
+        {
+          assistantImage,
+          assistantName,
+        },
+        { new: true }
+      )
+      .select("-password");
+
+    return res.status(200).json(user);
   } catch (error) {
-    return res.status(400).json({ msg: "update assistant error}" })
-    
+    return res.status(400).json({ msg: "update assistant error}" });
   }
-  }
-  
+};

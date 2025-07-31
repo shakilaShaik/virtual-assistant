@@ -3,7 +3,6 @@ import { UserContext } from "../context/UserContext";
 export const Home = () => {
   const { user } = useContext(UserContext);
 
-  
   return (
     <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex justify-center items-center flex-col gap-[10px]">
       <div
