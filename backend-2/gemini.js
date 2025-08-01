@@ -1,6 +1,13 @@
+import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
+const API_KEY = process.env.GEMINI_API_KEY;
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
 const geminiResponse = async (prompt) => {
-  if (typeof prompt !== "string" || prompt.trim() === "") {
-    throw new Error("Prompt must be a non-empty string");
+  if (!prompt || typeof prompt !== "string") {
+    throw new Error("Prompt must be a valid string");
   }
 
   const data = {
@@ -16,12 +23,16 @@ const geminiResponse = async (prompt) => {
   };
 
   try {
-    const result = await axios.post(url, data, { headers });
-    console.log(result.data);
-    return result.data;
+    const response = await axios.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
   } catch (error) {
     console.error("Gemini API error:", error.response?.data || error.message);
-    throw error;
+    throw new Error("Gemini API call failed");
   }
 };
-export default geminiResponse
+export default geminiResponse;

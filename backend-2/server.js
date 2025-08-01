@@ -28,12 +28,24 @@ const port = 3000;
 // app.use("/api/auth", userRouter);
 
 app.use("/api/auth", authRouter);
-app.get("/gemini", async(req, res) => {
-  let prompt = req.query.prompt;
-  let data = geminiResponse(prompt);
-  res.json(data)
-  
+
+app.get("/gemini", async (req, res) => {
+  try {
+    const prompt = req.query.prompt;
+
+    if (!prompt || prompt.trim() === "") {
+      return res.status(400).json({ error: "Prompt is required." });
+    }
+
+    const data = await geminiResponse(prompt); // ✅ Await the async call
+
+    res.json(data); // Send actual response data
+  } catch (error) {
+    console.error("Error in /gemini route:", error.message);
+    res.status(500).json({ error: "Failed to get response from Gemini API." });
+  }
 });
+
 app.listen(port, () => {
   mongoConnect();
   console.log(`app is running,${port}`);
