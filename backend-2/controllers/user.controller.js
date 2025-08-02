@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import getToken from "../config/token.js";
 import userModel from "../models/user.model.js";
+import geminiResponse from "../gemini.js";
+
 
 export const signUp = async (req, res) => {
   try {
@@ -129,3 +131,27 @@ export const updateAssistant = async (req, res) => {
     return res.status(400).json({ msg: "update assistant error}" });
   }
 };
+
+
+
+export const askToAssistant = async(req,res)=>{
+
+
+  try {
+    const {command}= req.body
+    const user = user.findById(req.userId);
+    const userName = user.name
+    const assistantName = user.assistantName;
+    const result = geminiResponse(command, userName, assistantName)
+    
+    const jsonConvert = result.match(/{[\s\S]*}/)
+    if (!jsonConvert) {
+      return res.status(400).json({response:"sorry , I cant find anything related"})
+    }
+    const geminiResult = JSON.parse(jsonConvert[0])
+    const type= geminiResult.type
+  }
+  catch (error) {
+    
+  }
+}
