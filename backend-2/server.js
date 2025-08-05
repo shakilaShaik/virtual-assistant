@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { authRouter } from "./routes/user.route.js";
+import { authRouter, gemRouter } from "./routes/user.route.js";
 import geminiResponse from "./gemini.js";
 
 const app = express();
@@ -28,6 +28,7 @@ const port = 3000;
 // app.use("/api/auth", userRouter);
 
 app.use("/api/auth", authRouter);
+app.use("/ask", gemRouter)
 
 app.get("/gemini", async (req, res) => {
   try {

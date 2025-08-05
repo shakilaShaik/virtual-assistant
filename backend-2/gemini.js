@@ -18,13 +18,13 @@ Your task is to understand the user's natural language input and respond with a 
   "type": "general" | "google-search" | "youtube-play" |
           "get-time" | "get-date" | "get-month" | "calculator-open" |
           "instagram-open" | "facebook-open" | "weather-show" |
-  "userinput": <original user sentence>,{only remove your name and all the data in the user input, if anyone ask to search the userinput will be the searchable command}
+  "userInput": <original user sentence>,{only remove your name and all the data in the user input, if anyone ask to search the user input will be the searchable command}
   "response": <short friendly reply>
 }
 
 Instructions:
 - "type": determine the user's intent.
-- "userinput": original sentence the user spoke.
+- "userInput": original sentence the user spoke.
 - "response": a short, voice-friendly reply, e.g., "Sure, playing it now", "Here is what I found", "Today is Tuesday", etc.
 Type meanings:
 - "general": if it's a factual or informational question.

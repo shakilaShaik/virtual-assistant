@@ -5,10 +5,13 @@ import {
   logout,
   getCurrentUser,
   updateAssistant,
+  askToAssistant,
 } from "../controllers/user.controller.js";
 import auth from "../middleware/auth.js";
 import uploadingToMulter from "../middleware/multer.js";
 export const authRouter = Router();
+
+
 authRouter.post("/signup", signUp);
 authRouter.post("/login", login);
 authRouter.get("/logout", logout);
@@ -19,3 +22,5 @@ authRouter.put(
   uploadingToMulter.single("assistantImage"),
   updateAssistant
 );
+export const gemRouter = Router();
+gemRouter.post('/ask-gemini',auth,askToAssistant) 

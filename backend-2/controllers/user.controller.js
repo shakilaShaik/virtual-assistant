@@ -2,7 +2,8 @@ import bcrypt from "bcryptjs";
 import getToken from "../config/token.js";
 import userModel from "../models/user.model.js";
 import geminiResponse from "../gemini.js";
-
+import moment from "moment/moment.js";
+import { response } from "express";
 
 export const signUp = async (req, res) => {
   try {
@@ -65,7 +66,7 @@ export const login = async (req, res) => {
     // Set httpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 7 days
       sameSite: "strict",
       secure: false, // Set to true in production
     });
@@ -132,26 +133,72 @@ export const updateAssistant = async (req, res) => {
   }
 };
 
-
-
-export const askToAssistant = async(req,res)=>{
-
-
+export const askToAssistant = async (req, res) => {
   try {
-    const {command}= req.body
+    const { command } = req.body;
     const user = user.findById(req.userId);
-    const userName = user.name
+    const userName = user.name;
     const assistantName = user.assistantName;
-    const result = geminiResponse(command, userName, assistantName)
-    
-    const jsonConvert = result.match(/{[\s\S]*}/)
+    const result = geminiResponse(command, userName, assistantName);
+
+    const jsonConvert = result.match(/{[\s\S]*}/);
     if (!jsonConvert) {
-      return res.status(400).json({response:"sorry , I cant find anything related"})
+      return res
+        .status(400)
+        .json({ response: "sorry , I cant find anything related" });
     }
-    const geminiResult = JSON.parse(jsonConvert[0])
-    const type= geminiResult.type
+    const geminiResult = JSON.parse(jsonConvert[0]);
+    const type = geminiResult.type;
+
+    switch (type) {
+      case "get-date":
+        return res.json({
+          type,
+          userInput: geminiResult.userInput,
+          res: `current date is ${moment().format("YYYY-MM-DD")}`,
+        });
+
+      case "get-time":
+        return res.json({
+          type,
+          userInput: geminiResult.userInput,
+          res: `current time  is ${moment().format("hh-mm A")}`,
+        });
+
+      case "get-day":
+        return res.json({
+          type,
+          userInput: geminiResult.userInput,
+          res: `today  is ${moment().format("ddd")}`,
+        });
+
+      case "get-month":
+        return res.json({
+          type,
+          userInput: geminiResult.userInput,
+          res: `today  is ${moment().format("MMM")}`,
+        });
+
+      case "youtube-search":
+      case "google-search":
+      case " youtube-play":
+      case "instagram-open":
+      case "facebook-open":
+      case "weather-show":
+        return res.json({
+          type,
+          userInput: geminiResult.userInput,
+          res: geminiResult.response,
+        });
+
+      default:
+        return res.status(400).json({
+          res: "I didn't understand that command.",
+        });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      res: "I didn't understand that command.",
+    });
   }
-  catch (error) {
-    
-  }
-}
+};
