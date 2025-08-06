@@ -22,5 +22,10 @@ const api = {
     url: "api/auth/update-user",
     method:"put"
   },
+
+  askGemini: {
+    url:"ask/ask-gemini",
+    method:'post'
+  }
 };
 export { api, baseUrl };
