@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useState, createContext } from "react";
 import axios from "axios";
-import { api } from "../common/api";
+import { api, baseUrl } from "../common/api";
 
 // 1️⃣ Create a context object
 export const UserContext = createContext();
@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const getGeminiRes = async (command) => {
     try {
       const result = await axios({
-        url: api.askGemini.url, // Assuming api.askGemini has a url property
+        url: `${baseUrl}/${api.askGemini.url} `,
         method: api.askGemini.method,
         data: { command }, // Send command in the body
         withCredentials: true,

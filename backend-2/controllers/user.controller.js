@@ -3,8 +3,7 @@ import getToken from "../config/token.js";
 import userModel from "../models/user.model.js";
 import geminiResponse from "../gemini.js";
 import moment from "moment/moment.js";
-import { response } from "express";
-
+import uploadingToMulter from "../middleware/multer.js";
 export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -112,7 +111,7 @@ export const updateAssistant = async (req, res) => {
     const { assistantName, imageURL } = req.body;
     let assistantImage;
     if (req.file) {
-      assistantImage = await upload(req.file.path);
+      assistantImage = await uploadingToMulter(req.file.path);
     } else {
       assistantImage = imageURL;
     }
@@ -136,10 +135,10 @@ export const updateAssistant = async (req, res) => {
 export const askToAssistant = async (req, res) => {
   try {
     const { command } = req.body;
-    const user = user.findById(req.userId);
+    const user = userModel.findById(req.userId);
     const userName = user.name;
     const assistantName = user.assistantName;
-    const result = geminiResponse(command, userName, assistantName);
+    const result = await geminiResponse(command, userName, assistantName);
 
     const jsonConvert = result.match(/{[\s\S]*}/);
     if (!jsonConvert) {
@@ -181,7 +180,7 @@ export const askToAssistant = async (req, res) => {
 
       case "youtube-search":
       case "google-search":
-      case " youtube-play":
+      case "youtube-play":
       case "instagram-open":
       case "facebook-open":
       case "weather-show":

@@ -2,17 +2,20 @@ import React, { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { FiArrowLeft } from "react-icons/fi"; // Arrow icon from react-icons
 
+
 export const Home = () => {
   const { user,getGeminiRes } = useContext(UserContext);
   console.log("assistant name is ", user.assistantName);
 
   useEffect(() => {
+    if (!user || !user.assistantName) return; // safety check
+
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
-    recognition.lang = "em-US";
+    recognition.lang = "en-US";
     recognition.onresult = async (e) => {
       const transcript = e.results[e.results.length - 1][0].transcript.trim();
       console.log(transcript);
@@ -22,7 +25,7 @@ export const Home = () => {
       }
     };
     recognition.start();
-  });
+  },[user,getGeminiRes]);
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col items-center relative">
