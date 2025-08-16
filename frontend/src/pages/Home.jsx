@@ -6,7 +6,53 @@ import { FiArrowLeft } from "react-icons/fi"; // Arrow icon from react-icons
 export const Home = () => {
   const { user,getGeminiRes } = useContext(UserContext);
   console.log("assistant name is ", user.assistantName);
+const speak =(text)=>{
+  const utterence=new SpeechSynthesisUtterance(text)
+  window.speechSynthesis.speak(utterence)
 
+}
+
+const handleCommand=(data)=>{
+  const {type, userInput, response}= data
+  speak(response)
+  if (type === 'google-search'){
+    const query= encodeURIComponent(userInput);
+    window.open(`https://www.google.com/search?q=${query}`,
+      '_blank'
+    )
+  }
+if (type === 'calculator-open'){
+    const query= encodeURIComponent(userInput);
+    window.open(`https://www.google.com/search?q=${query}`,
+      '_blank'
+    )
+  }
+  if (type === 'instagram-open'){
+    const query= encodeURIComponent(userInput);
+    window.open(`https://www.instagram.com/`,
+      '_blank'
+    )
+  }
+  if (type === 'facebook-open'){
+    const query= encodeURIComponent(userInput);
+    window.open(`https://www.facebook.com/`,
+      '_blank'
+    )
+  }
+  if (type === 'youtube-search' || 'youtube-play'){
+    const query= encodeURIComponent(userInput);
+    window.open(`https://www.youtube.com/results?search_query=${query}`,
+      '_blank'
+    )
+  }
+  if (type === 'weather-show'){
+    const query= encodeURIComponent(userInput);
+    window.open(`https://www.google.com/search?q=weather`,
+      '_blank'
+    )
+  }
+
+}
   useEffect(() => {
     if (!user || !user.assistantName) return; // safety check
 
@@ -20,8 +66,9 @@ export const Home = () => {
       const transcript = e.results[e.results.length - 1][0].transcript.trim();
       console.log(transcript);
       if (transcript.toLowerCase().includes(user.assistantName.toLowerCase())) {
-        let response = await getGeminiRes(transcript);
+        const data= await getGeminiRes(transcript);
         console.log(response);
+      handleCommand(data)
       }
     };
     recognition.start();
