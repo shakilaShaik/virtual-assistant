@@ -1,10 +1,15 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { FiArrowLeft } from "react-icons/fi"; // Arrow icon from react-icons
 
 
 export const Home = () => {
   const { user,getGeminiRes } = useContext(UserContext);
+
+
+
+  const [listening, setListening]=useState(null)
+  
   console.log("assistant name is ", user.assistantName);
 const speak =(text)=>{
   const utterence=new SpeechSynthesisUtterance(text)
