@@ -19,7 +19,7 @@ Your task is to understand the user's natural language input and respond with a 
   "type": "general" | "google-search" | "youtube-play" |
           "get-time" | "get-date" | "get-month" | "calculator-open" |
           "instagram-open" | "facebook-open" | "weather-show" |
-  "userInput": <original user sentence>,{only remove your name and all the data in the user input, if anyone ask to search the user input will be the searchable command}
+  "userInput": <original user sentence> e.g.,{only remove your name and all the data in the user input, if anyone ask to search the user input will be the searchable command}
   "response": <short friendly reply>
 }
 

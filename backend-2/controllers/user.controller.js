@@ -131,26 +131,34 @@ export const updateAssistant = async (req, res) => {
     return res.status(400).json({ msg: "update assistant error}" });
   }
 };
-
 export const askToAssistant = async (req, res) => {
   try {
     const { command } = req.body;
-    const user = userModel.findById(req.userId);
+    const user = await userModel.findById(req.userId);
 
+    if (!user) {
+      return res.status(404).json({ response: "User not found" });
+    }
 
-    user.history.push(command)
-    user.save()
+    user.history.push(command);
+    await user.save();
+
     const userName = user.name;
     const assistantName = user.assistantName;
-    const result = await geminiResponse(command, userName, assistantName);
+    const result = await geminiResponse(command, assistantName, userName);
 
     const jsonConvert = result.match(/{[\s\S]*}/);
     if (!jsonConvert) {
-      return res
-        .status(400)
-        .json({ response: "sorry , I cant find anything related" });
+      return res.status(400).json({ response: "Sorry, I can’t find anything related" });
     }
-    const geminiResult = JSON.parse(jsonConvert[0]);
+
+    let geminiResult;
+    try {
+      geminiResult = JSON.parse(jsonConvert[0]);
+    } catch {
+      return res.status(400).json({ response: "Sorry, response was not valid JSON." });
+    }
+
     const type = geminiResult.type;
 
     switch (type) {
@@ -158,28 +166,28 @@ export const askToAssistant = async (req, res) => {
         return res.json({
           type,
           userInput: geminiResult.userInput,
-          res: `current date is ${moment().format("YYYY-MM-DD")}`,
+          response: `Current date is ${moment().format("YYYY-MM-DD")}`,
         });
 
       case "get-time":
         return res.json({
           type,
           userInput: geminiResult.userInput,
-          res: `current time  is ${moment().format("hh-mm A")}`,
+          response: `Current time is ${moment().format("hh-mm A")}`,
         });
 
       case "get-day":
         return res.json({
           type,
           userInput: geminiResult.userInput,
-          res: `today  is ${moment().format("ddd")}`,
+          response: `Today is ${moment().format("ddd")}`,
         });
 
       case "get-month":
         return res.json({
           type,
           userInput: geminiResult.userInput,
-          res: `today  is ${moment().format("MMM")}`,
+          response: `This month is ${moment().format("MMM")}`,
         });
 
       case "youtube-search":
@@ -191,18 +199,18 @@ export const askToAssistant = async (req, res) => {
         return res.json({
           type,
           userInput: geminiResult.userInput,
-          res: geminiResult.response,
+          response: geminiResult.response,
         });
 
       default:
         return res.status(400).json({
-          res: "I didn't understand that command.",
+          response: "I didn't understand that command.",
         });
     }
-
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      res: "I didn't understand that command.",
+      response: "Server error, please try again.",
     });
   }
 };
