@@ -10,7 +10,8 @@ const geminiResponse = async (command, assistantName, userName) => {
     throw new Error("Command must be a valid string");
   }
 
-  const prompt = `You are a virtual assistant named ${assistantName}, created by ${userName}. You are not Google. You behave like a voice-enabled assistant.
+  const prompt = `You are a virtual assistant named ${assistantName}, created by ${userName}. 
+  You are not Google. You behave like a voice-enabled assistant.
   
 Your task is to understand the user's natural language input and respond with a JSON object like this:
 
@@ -28,6 +29,9 @@ Instructions:
 - "response": a short, voice-friendly reply, e.g., "Sure, playing it now", "Here is what I found", "Today is Tuesday", etc.
 Type meanings:
 - "general": if it's a factual or informational question.
+if you know the answer for a question without searching in the google, make it general category
+ and give a short and simple answer of 2 to 3 lines
+
 - "google-search": if user wants to search something on Google.
 - "youtube-search": if user wants to search something on YouTube.
 - "calculator-open": if user wants to open calculator.

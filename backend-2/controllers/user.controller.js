@@ -136,6 +136,10 @@ export const askToAssistant = async (req, res) => {
   try {
     const { command } = req.body;
     const user = userModel.findById(req.userId);
+
+
+    user.history.push(command)
+    user.save()
     const userName = user.name;
     const assistantName = user.assistantName;
     const result = await geminiResponse(command, userName, assistantName);
@@ -195,6 +199,7 @@ export const askToAssistant = async (req, res) => {
           res: "I didn't understand that command.",
         });
     }
+
   } catch (error) {
     return res.status(500).json({
       res: "I didn't understand that command.",
