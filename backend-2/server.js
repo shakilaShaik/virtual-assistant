@@ -28,7 +28,7 @@ const port = 3000;
 // app.use("/api/auth", userRouter);
 
 app.use("/api/auth", authRouter);
-app.use("/ask", gemRouter)
+app.use("/ask", gemRouter);
 
 app.get("/gemini", async (req, res) => {
   try {

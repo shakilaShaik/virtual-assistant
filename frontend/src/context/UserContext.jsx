@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const getGeminiRes = async (command) => {
     try {
       const result = await axios({
-        url: `${baseUrl}/${api.askGemini.url} `,
+        url: `${baseUrl}/${api.askGemini.url}`,
         method: api.askGemini.method,
         data: { command }, // Send command in the body
         withCredentials: true,
