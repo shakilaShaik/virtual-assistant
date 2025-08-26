@@ -4,14 +4,16 @@ import { FiArrowLeft, FiMenu, FiX } from "react-icons/fi";
 import AiVoiceEffect from "../assets/Aivoice.gif";
 import voiceListen from "../assets/VoiceRecognition.gif";
 
+import { Link } from 'react-router-dom';
+import axios from "axios";
+import { baseUrl,api } from "../common/api";
+
 export const Home = () => {
   const { user, getGeminiRes } = useContext(UserContext);
-
   const [listening, setListening] = useState(false);
   const [userText, setUserText] = useState("");
   const [aiText, setAiText] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-
   const isSpeakRef = useRef(false);
   const recognitionRef = useRef(null);
   const isRecognisingRef = useRef(false);
@@ -155,14 +157,30 @@ export const Home = () => {
     };
   }, [user, getGeminiRes]);
 
+
+  const handleLogout=async()=>{
+    try {
+      await axios({
+        method:api.logout.method,
+        url:`${baseUrl}/${api.logout.url}`,
+        withCredentials:true
+      })
+    } catch (error) {
+      console.log(error)
+      
+    }
+
+  }
   return (
     <div className="w-full min-h-screen bg-gradient-to-t from-black to-[#030353] flex flex-col items-center relative">
       {/* Desktop buttons */}
       <div className="absolute top-4 right-4 hidden sm:flex flex-col gap-2 z-10">
-        <button className="px-4 py-2 rounded-full font-semibold text-sm sm:text-base bg-white text-blue-800 hover:bg-blue-100">
+        <Link 
+        to="/customize"
+        className="px-4 py-2 rounded-full font-semibold text-sm sm:text-base bg-white text-blue-800 hover:bg-blue-100">
           Customize Account
-        </button>
-        <button className="px-4 py-2 rounded-full font-semibold text-sm sm:text-base bg-white text-blue-800 hover:bg-blue-100">
+        /</Link>
+        <button  onClick={handleLogout} className="px-4 py-2 rounded-full font-semibold text-sm sm:text-base bg-white text-blue-800 hover:bg-blue-100">
           Log out
         </button>
       </div>
@@ -180,7 +198,9 @@ export const Home = () => {
           <button className="px-4 py-2 rounded-lg font-semibold text-sm text-blue-800 hover:bg-blue-100">
             Customize Account
           </button>
-          <button className="px-4 py-2 rounded-lg font-semibold text-sm text-blue-800 hover:bg-blue-100">
+          <button 
+          onClick={handleLogout}
+          className="px-4 py-2 rounded-lg font-semibold text-sm text-blue-800 hover:bg-blue-100">
             Log out
           </button>
         </div>

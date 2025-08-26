@@ -40,10 +40,10 @@ const Customize2 = () => {
         },
       });
 
-      console.log("Assistant updated:", res.data);
-      navigate("/home");
+     
+      navigate("/");
     } catch (err) {
-      console.error("Failed to update assistant:", err);
+     
       alert("Failed to save assistant. Try again.");
     } finally {
       setLoading(false);

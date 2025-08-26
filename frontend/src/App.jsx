@@ -29,11 +29,11 @@ const App = () => {
         withCredentials: true,
       });
       setUser(result.data.user);
-      console.log("the result from get", result);
+      
 
-      console.log("user  is ", user);
+    
     } catch (error) {
-      console.log("error from user data", error);
+     
     }
     finally {
       setLoading(false)
@@ -44,7 +44,7 @@ const App = () => {
     handleUserData();
   }, []);
    useEffect(() => {
-     console.log("User context updated:", user);
+    
    }, [user]);
 
   if (loading) {
