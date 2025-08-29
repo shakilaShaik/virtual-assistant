@@ -131,63 +131,166 @@ export const updateAssistant = async (req, res) => {
     return res.status(400).json({ msg: "update assistant error}" });
   }
 };
+// export const askToAssistant = async (req, res) => {
+//   try {
+//     const { command } = req.body;
+//     const user = await userModel.findById(req.userId);
+
+//     if (!user) {
+//       return res.status(404).json({ response: "User not found" });
+//     }
+
+//     user.history.push(command);
+//     await user.save();
+
+//     const userName = user.name;
+//     const assistantName = user.assistantName;
+//     const result = await geminiResponse(command, assistantName, userName);
+
+//     const jsonConvert = result.match(/{[\s\S]*}/);
+//     if (!jsonConvert) {
+//       return res.status(400).json({ response: "Sorry, I can’t find anything related" });
+//     }
+
+//     let geminiResult;
+//     try {
+//       geminiResult = JSON.parse(jsonConvert[0]);
+//     } catch {
+//       return res.status(400).json({ response: "Sorry, response was not valid JSON." });
+//     }
+
+//     const type = geminiResult.type;
+
+//     switch (type) {
+//       case "get-date":
+//         return res.json({
+//           type,
+//           userInput: geminiResult.userInput,
+//           response: `Current date is ${moment().format("YYYY-MM-DD")}`,
+//         });
+
+//       case "get-time":
+//         return res.json({
+//           type,
+//           userInput: geminiResult.userInput,
+//           response: `Current time is ${moment().format("hh-mm A")}`,
+//         });
+
+//       case "get-day":
+//         return res.json({
+//           type,
+//           userInput: geminiResult.userInput,
+//           response: `Today is ${moment().format("ddd")}`,
+//         });
+
+//       case "get-month":
+//         return res.json({
+//           type,
+//           userInput: geminiResult.userInput,
+//           response: `This month is ${moment().format("MMM")}`,
+//         });
+
+//       case "youtube-search":
+//       case "google-search":
+//       case "youtube-play":
+//       case "instagram-open":
+//       case "facebook-open":
+//       case "weather-show":
+//         return res.json({
+//           type,
+//           userInput: geminiResult.userInput,
+//           response: geminiResult.response,
+//         });
+
+//       default:
+//         return res.status(400).json({
+//           response: "I didn't understand that command.",
+//         });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({
+//       response: "Server error, please try again.",
+//     });
+//   }
+// };
+
+
+
 export const askToAssistant = async (req, res) => {
   try {
     const { command } = req.body;
-    const user = await userModel.findById(req.userId);
 
+    // ✅ Validate input
+    if (!command || typeof command !== "string") {
+      return res.status(400).json({ response: "Command is required and must be a string." });
+    }
+
+    // ✅ Make sure user is fetched properly
+    const user = await userModel.findById(req.userId);
     if (!user) {
       return res.status(404).json({ response: "User not found" });
     }
 
+    // ✅ Ensure history is always an array
+    if (!Array.isArray(user.history)) {
+      user.history = [];
+    }
+
+    // ✅ Save user command in history
     user.history.push(command);
     await user.save();
 
-    const userName = user.name;
-    const assistantName = user.assistantName;
+    const userName = user.name || "User";
+    const assistantName = user.assistantName || "Assistant";
+
+    // ✅ Get Gemini response
     const result = await geminiResponse(command, assistantName, userName);
 
-    const jsonConvert = result.match(/{[\s\S]*}/);
-    if (!jsonConvert) {
-      return res.status(400).json({ response: "Sorry, I can’t find anything related" });
+    // ✅ Extract JSON safely
+    const jsonMatch = result?.match(/{[\s\S]*}/);
+    if (!jsonMatch) {
+      return res.status(400).json({ response: "Sorry, I couldn’t parse the assistant response." });
     }
 
     let geminiResult;
     try {
-      geminiResult = JSON.parse(jsonConvert[0]);
-    } catch {
-      return res.status(400).json({ response: "Sorry, response was not valid JSON." });
+      geminiResult = JSON.parse(jsonMatch[0]);
+    } catch (err) {
+      console.error("JSON parsing error:", err.message);
+      return res.status(400).json({ response: "Invalid response format from AI." });
     }
 
-    const type = geminiResult.type;
+    const { type, userInput, response } = geminiResult;
 
+    // ✅ Handle supported commands
     switch (type) {
       case "get-date":
         return res.json({
           type,
-          userInput: geminiResult.userInput,
+          userInput,
           response: `Current date is ${moment().format("YYYY-MM-DD")}`,
         });
 
       case "get-time":
         return res.json({
           type,
-          userInput: geminiResult.userInput,
-          response: `Current time is ${moment().format("hh-mm A")}`,
+          userInput,
+          response: `Current time is ${moment().format("hh:mm A")}`,
         });
 
       case "get-day":
         return res.json({
           type,
-          userInput: geminiResult.userInput,
-          response: `Today is ${moment().format("ddd")}`,
+          userInput,
+          response: `Today is ${moment().format("dddd")}`,
         });
 
       case "get-month":
         return res.json({
           type,
-          userInput: geminiResult.userInput,
-          response: `This month is ${moment().format("MMM")}`,
+          userInput,
+          response: `This month is ${moment().format("MMMM")}`,
         });
 
       case "youtube-search":
@@ -198,17 +301,17 @@ export const askToAssistant = async (req, res) => {
       case "weather-show":
         return res.json({
           type,
-          userInput: geminiResult.userInput,
-          response: geminiResult.response,
+          userInput,
+          response,
         });
 
       default:
         return res.status(400).json({
-          response: "I didn't understand that command.",
+          response: "I didn’t understand that command.",
         });
     }
   } catch (error) {
-    console.error(error);
+    console.error("API error:", error);
     return res.status(500).json({
       response: "Server error, please try again.",
     });
