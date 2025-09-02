@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3000";
+const baseUrl = import.meta.env.VITE_API_URL;
 const api = {
   register: {
     url: "api/auth/signup",
@@ -16,16 +16,16 @@ const api = {
 
   getUser: {
     url: "api/auth/get-user",
-    method:"get"
+    method: "get"
   },
   updateUser: {
     url: "api/auth/update-user",
-    method:"put"
+    method: "put"
   },
 
   askGemini: {
-    url:"ask/ask-gemini",
-    method:'post'
+    url: "ask/ask-gemini",
+    method: 'post'
   }
 };
 export { api, baseUrl };
