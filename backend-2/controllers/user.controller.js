@@ -232,23 +232,25 @@ export const askToAssistant = async (req, res) => {
       return res.status(404).json({ response: "User not found" });
     }
 
-    // ✅ Ensure history is always an array
-    if (!Array.isArray(user.history)) {
-      user.history = [];
-    }
+    // // ✅ Ensure history is always an array
+    // if (!Array.isArray(user.history)) {
+    //   user.history = [];
+    // }
 
-    // ✅ Save user command in history
-    user.history.push(command);
-    await user.save();
+    // // ✅ Save user command in history
+    // user.history.push(command);
+    // await user.save();
 
     const userName = user.name || "User";
     const assistantName = user.assistantName || "Assistant";
 
     // ✅ Get Gemini response
     const result = await geminiResponse(command, assistantName, userName);
+    console.log("The result from gemini", result)
 
     // ✅ Extract JSON safely
     const jsonMatch = result?.match(/{[\s\S]*}/);
+    console.log("The json matching", jsonMatch)
     if (!jsonMatch) {
       return res.status(400).json({ response: "Sorry, I couldn’t parse the assistant response." });
     }
@@ -256,6 +258,7 @@ export const askToAssistant = async (req, res) => {
     let geminiResult;
     try {
       geminiResult = JSON.parse(jsonMatch[0]);
+      console.log("the actual gemini response ", geminiResult)
     } catch (err) {
       console.error("JSON parsing error:", err.message);
       return res.status(400).json({ response: "Invalid response format from AI." });
@@ -265,12 +268,16 @@ export const askToAssistant = async (req, res) => {
 
     // ✅ Handle supported commands
     switch (type) {
+
+      case "general":
+        return res.json({ type, userInput, response });
       case "get-date":
         return res.json({
           type,
           userInput,
           response: `Current date is ${moment().format("YYYY-MM-DD")}`,
         });
+
 
       case "get-time":
         return res.json({

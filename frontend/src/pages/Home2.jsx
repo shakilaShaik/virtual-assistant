@@ -114,7 +114,7 @@ import { baseUrl, api } from "../common/api";
 
       {/* 🔹 Chat container */}
       <div className="flex-grow w-full sm:w-[600px] flex flex-col px-4 pt-20 sm:pt-10">
-        <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-white/10 rounded-xl shadow-md">
+        <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-white/10 rounded-xl shadow-md ">
           {messages.map((msg, idx) => (
             <div
               key={idx}

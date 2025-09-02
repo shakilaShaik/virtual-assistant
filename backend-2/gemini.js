@@ -80,6 +80,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const API_KEY = process.env.GEMINI_API_KEY;
+// console.log(API_KEY, ".....the api key is")
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
 const geminiResponse = async (command, assistantName, userName) => {
@@ -89,7 +90,7 @@ const geminiResponse = async (command, assistantName, userName) => {
 
   const prompt = `
 You are a helpful virtual assistant named ${assistantName}, created by ${userName}.
-Behave like a chat assistant, answering naturally but always respond in JSON:
+Behave like a chat assistant, answering naturally but always respond in JSON format without any extra raw arguments:
 
 {
   "type": "general" | "google-search" | "youtube-play" | "youtube-search" |
