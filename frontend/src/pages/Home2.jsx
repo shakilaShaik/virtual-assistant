@@ -11,7 +11,7 @@ import { baseUrl, api } from "../common/api";
   const [messages, setMessages] = useState([]); // Chat history
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-
+console.log(user)
   // 🔹 Send chat message to backend
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -114,17 +114,41 @@ import { baseUrl, api } from "../common/api";
 
       {/* 🔹 Chat container */}
       <div className="flex-grow w-full sm:w-[600px] flex flex-col px-4 pt-20 sm:pt-10">
+       
         <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-white/10 rounded-xl shadow-md ">
+        <div className="text-center mt-1.5">
+  <h1 className="font-bold text-2xl text-white">
+    Hello! {user.name}
+  </h1>
+  <h2 className="text-white">
+    How can I help you today?
+  </h2>
+  <p className="text-gray-300 text-sm mt-2 italic">
+    🤖 I'm your AI assistant — ready to answer questions, brainstorm ideas, or chat!
+  </p>
+</div>
+
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`p-3 rounded-xl max-w-[80%] ${
+              className={`flex items-start mb-2 ${
                 msg.role === "user"
-                  ? "bg-blue-600 text-white self-end"
-                  : "bg-gray-200 text-black self-start"
+                  ? " justify-end"
+                  : " justify-start"
               }`}
             >
-              {msg.text}
+           {msg.role==="assistant" &&(
+            <img src={user.assistantImage} className="w-8 h-8 rounded-full mr-2"/>
+           )}
+      <div className={`p-3 rounded-xl max-w-[70%]
+        ${msg.role==="user"?"bg-blue-500 text-white":" bg-gray-200 text-black" }`
+      }>
+        
+        {msg.text}
+      </div>
+
+
+             
             </div>
           ))}
 
@@ -143,11 +167,11 @@ import { baseUrl, api } from "../common/api";
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder={`Ask ${user?.assistantName || "Assistant"} anything...`}
-            className="flex-1 p-3 rounded-xl bg-white shadow-md focus:outline-none text-black"
+            className=" rounded-full flex-1 p-3  bg-white shadow-md focus:outline-none text-blue-700 mb-5"
           />
           <button
             onClick={handleSend}
-            className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700"
+            className="px-4 py-2 rounded-full bg-white text-blue-600  font-semibold hover:bg-blue-700"
           >
             Send
           </button>
