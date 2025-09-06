@@ -1,25 +1,24 @@
 import express from "express";
 import mongoConnect from "./config/db.js";
-// import userRouter from "./routes/user.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRouter, gemRouter } from "./routes/user.route.js";
-// import geminiResponse from "./gemini.js";
+
 
 const app = express();
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true, // Allow cookies/auth headers
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 app.use(cors(corsOptions));
 
-app.options("*", cors(corsOptions));
+
 
 
 app.use(express.json());
@@ -30,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-// app.use("/api/auth", userRouter);
+
 
 app.use("/api/auth", authRouter);
 app.use("/ask", gemRouter);

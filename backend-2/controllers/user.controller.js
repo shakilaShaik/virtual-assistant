@@ -100,6 +100,7 @@ export const getCurrentUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({ msg: "user not found" });
     }
+
     return res.status(200).json({ user: user });
   } catch (error) {
     return res.status(400).json({ msg: "user not found" });
@@ -248,23 +249,10 @@ export const askToAssistant = async (req, res) => {
     const result = await geminiResponse(command, assistantName, userName);
     console.log("The result from gemini", result)
 
-    // ✅ Extract JSON safely
-    const jsonMatch = result?.match(/{[\s\S]*}/);
-    console.log("The json matching", jsonMatch)
-    if (!jsonMatch) {
-      return res.status(400).json({ response: "Sorry, I couldn’t parse the assistant response." });
-    }
 
-    let geminiResult;
-    try {
-      geminiResult = JSON.parse(jsonMatch[0]);
-      console.log("the actual gemini response ", geminiResult)
-    } catch (err) {
-      console.error("JSON parsing error:", err.message);
-      return res.status(400).json({ response: "Invalid response format from AI." });
-    }
+    
 
-    const { type, userInput, response } = geminiResult;
+    const { type, userInput, response } = result;
 
     // ✅ Handle supported commands
     switch (type) {
@@ -300,17 +288,7 @@ export const askToAssistant = async (req, res) => {
           response: `This month is ${moment().format("MMMM")}`,
         });
 
-      case "youtube-search":
-      case "google-search":
-      case "youtube-play":
-      case "instagram-open":
-      case "facebook-open":
-      case "weather-show":
-        return res.json({
-          type,
-          userInput,
-          response,
-        });
+
 
       default:
         return res.status(400).json({

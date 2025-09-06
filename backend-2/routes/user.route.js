@@ -12,6 +12,24 @@ import uploadingToMulter from "../middleware/multer.js";
 export const authRouter = Router();
 
 
+
+
+// function logRouterRoutes(prefix, router) {
+//   if (!router.stack) return;
+//   console.log(`\n📌 Routes registered under: "${prefix}"`);
+//   router.stack.forEach((layer) => {
+//     if (layer.route) {
+//       const path = layer.route.path;
+//       const methods = Object.keys(layer.route.methods)
+//         .map((m) => m.toUpperCase())
+//         .join(", ");
+//       console.log(`   [${methods}] ${prefix}${path}`);
+//     }
+//   });
+// }
+// logRouterRoutes("/api/auth", authRouter);
+
+
 authRouter.post("/signup", signUp);
 authRouter.post("/login", login);
 authRouter.get("/logout", logout);
@@ -23,4 +41,5 @@ authRouter.put(
   updateAssistant
 );
 export const gemRouter = Router();
-gemRouter.post('/ask-gemini',auth,askToAssistant) 
+gemRouter.post('/ask-gemini', auth, askToAssistant)
+// logRouterRoutes("/ask", gemRouter);

@@ -24,14 +24,11 @@ const App = () => {
   const handleUserData = async () => {
     try {
       const result = await axios({
-        method: api.method,
+        method: api.getUser.method,
         url: `${baseUrl}/${api.getUser.url}`,
         withCredentials: true,
       });
-      setUser(result.data.user);
-      
-
-    
+      setUser(result.data.user);    
     } catch (error) {
      
     }
