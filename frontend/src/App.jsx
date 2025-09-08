@@ -1,69 +1,61 @@
-import React, { useContext, useState } from "react";
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import  Home  from "./pages/Home2";
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home2";
 import Signup from "./pages/Signup";
 import SignIn from "./pages/Signin";
 import Customize from "./pages/Customize";
-import { useEffect } from "react";
+import Customize2 from "./pages/Customize2";
 import axios from "axios";
 import { api, baseUrl } from "./common/api";
 import { UserContext } from "./context/UserContext";
-import Customize2 from "./pages/Customize2";
-// const [user, setUser] = useState(null)
 
 const App = () => {
   const { user, setUser } = useContext(UserContext);
-  const [loading,setLoading]=useState(true)
+  const [loading, setLoading] = useState(true);
 
-  const handleUserData = async () => {
+  const handleUserData = useCallback(async () => {
     try {
       const result = await axios({
         method: api.getUser.method,
         url: `${baseUrl}/${api.getUser.url}`,
         withCredentials: true,
       });
-      setUser(result.data.user);    
+      
+      setUser(result.data?.user ?? null);
     } catch (error) {
-     
+      console.error("Failed to fetch user:", error);
+      setUser(null); // Explicitly set null if request fails
+    } finally {
+      setLoading(false);
     }
-    finally {
-      setLoading(false)
-    }
-  };
+  }, [setUser]);
 
   useEffect(() => {
     handleUserData();
-  }, []);
-   useEffect(() => {
-    
-   }, [user]);
+  }, [handleUserData]);
 
   if (loading) {
-    return <div>Loading....</div>
+    return <div className="text-center font-bold text-2xl">Loading...</div>;
   }
- 
 
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={user ? <Home /> : <Navigate to={"/signin"} />}
-          />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/customize" element={<Customize />} />
-          <Route path="/customize2" element={<Customize2 />} />
-        </Routes>
-      </Router>
-    </div>
+    <Router>
+      <Routes>
+        {/* ✅ Only redirect to /signin when we are sure there is NO user */}
+        <Route
+          path="/"
+          element={
+            user ? <Home /> : <Navigate to="/signin" replace />
+          }
+        />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={user ? <Navigate to="/" replace /> : <SignIn />} />
+        <Route path="/customize" element={user ? <Customize /> : <Navigate to="/signin" replace />} />
+        <Route path="/customize2" element={user ? <Customize2 /> : <Navigate to="/signin" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 };
+
 export default App;

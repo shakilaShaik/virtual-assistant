@@ -96,7 +96,7 @@ export const getCurrentUser = async (req, res) => {
     const userId = req.userId;
 
     const user = await userModel.findById(userId).select("-password");
-    console.log(user, "user is ");
+    console.log("user from get user route", user);
     if (!user) {
       return res.status(400).json({ msg: "user not found" });
     }
