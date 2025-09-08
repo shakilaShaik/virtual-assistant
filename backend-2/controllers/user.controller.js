@@ -93,7 +93,7 @@ export const logout = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    console.log(req)
+    
     const userId = req.userId;
 
     const user = await userModel.findById(userId).select("-password");
