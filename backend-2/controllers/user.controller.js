@@ -67,7 +67,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 7 days
       sameSite: "none",
-      secure: true, // Set to true in production
+      secure: process.env.NODE_ENV === "production"
     });
 
     // Send user details (excluding password)
