@@ -11,7 +11,7 @@ import { baseUrl, api } from "../common/api";
   const [messages, setMessages] = useState([]); // Chat history
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-console.log(user)
+
   // 🔹 Send chat message to backend
   const handleSend = async () => {
     if (!input.trim()) return;
