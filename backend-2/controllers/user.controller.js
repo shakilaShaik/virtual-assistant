@@ -66,8 +66,8 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: "strict",
-      secure: false, // Set to true in production
+      sameSite: "none",
+      secure: true, // Set to true in production
     });
 
     // Send user details (excluding password)
@@ -93,6 +93,7 @@ export const logout = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
+    console.log(req)
     const userId = req.userId;
 
     const user = await userModel.findById(userId).select("-password");
@@ -250,7 +251,7 @@ export const askToAssistant = async (req, res) => {
     console.log("The result from gemini", result)
 
 
-    
+
 
     const { type, userInput, response } = result;
 
