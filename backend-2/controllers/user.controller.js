@@ -67,7 +67,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 7 days
       sameSite: "none",
-      secure: process.env.NODE_ENV === "production"
+      // secure: process.env.NODE_ENV === "production"
     });
 
     // Send user details (excluding password)
@@ -93,7 +93,7 @@ export const logout = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    
+
     const userId = req.userId;
 
     const user = await userModel.findById(userId).select("-password");
