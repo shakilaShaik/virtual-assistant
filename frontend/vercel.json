@@ -2,6 +2,10 @@
     "version": 2,
     "routes": [
         {
+            "src": "/(.*\\.(js|css|png|jpg|jpeg|svg|gif|ico|json))",
+            "dest": "/$1"
+        },
+        {
             "src": "/(.*)",
             "dest": "/index.html"
         }
