@@ -67,7 +67,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 7 days
       sameSite: "none",
-      // secure: process.env.NODE_ENV === "production"
+      secure: true
     });
 
     // Send user details (excluding password)
@@ -88,7 +88,7 @@ export const logout = async (req, res) => {
       httpOnly: true,
       maxAge: 0,
       sameSite: "none",
-      // secure: process.env.NODE_ENV === "production"
+      secure: true
     });
     return res.status(200).json({ msg: "logout successfully" });
   } catch (error) {
